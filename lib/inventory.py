@@ -17,6 +17,8 @@ from pathlib import Path
 from utils import (
     load_config,
     atomic_write,
+    utc_now,
+    normalize_hostname,
 )
 
 # ---------------------------------------------------------------------
@@ -118,6 +120,121 @@ def save_inventory(inventory: dict) -> None:
         "\n".join(lines) + "\n"
     )
 
+# ---------------------------------------------------------------------
+# Query API
+# ---------------------------------------------------------------------
+
+def asset_exists(inventory: dict, mac: str) -> bool:
+    """
+    Check if an asset exists.
+    """
+    return mac.lower() in inventory
+
+
+def get_asset(inventory: dict, mac: str) -> dict | None:
+    """
+    Return asset by MAC.
+    """
+    return inventory.get(mac.lower())
+
+
+def get_all_assets(inventory: dict) -> list[dict]:
+    """
+    Return all assets.
+    """
+    return list(inventory.values())
+
+
+# ---------------------------------------------------------------------
+# Update API
+# ---------------------------------------------------------------------
+
+def update_asset(
+    inventory: dict,
+    ip: str,
+    mac: str,
+    hostname: str,
+) -> dict:
+    """
+    Create or update an asset.
+
+    Returns
+    -------
+    dict
+        {
+            "changed": bool,
+            "new_asset": bool,
+            "event": str,
+            "asset": dict
+        }
+    """
+
+    now = utc_now()
+
+    mac = mac.lower()
+
+    hostname = normalize_hostname(hostname)
+
+    if mac not in inventory:
+
+        asset = {
+            "MAC": mac,
+            "IP": ip,
+            "HOSTNAME": hostname,
+            "FIRST_SEEN": now,
+            "LAST_SEEN": now,
+            "LAST_EVENT": "NEW",
+            "COUNT": "1",
+            "VENDOR": "",
+            "STATUS": "NEW",
+            "LAST_ALERT": "",
+        }
+
+        inventory[mac] = asset
+
+        return {
+            "changed": True,
+            "new_asset": True,
+            "event": "NEW",
+            "asset": asset,
+        }
+
+    asset = inventory[mac]
+
+    changed = False
+
+    event = "RENEW"
+
+    if asset["IP"] != ip:
+
+        asset["IP"] = ip
+
+        changed = True
+
+        event = "IP_CHANGE"
+
+    if asset["HOSTNAME"] != hostname:
+
+        asset["HOSTNAME"] = hostname
+
+        changed = True
+
+        event = "HOSTNAME_CHANGE"
+
+    asset["LAST_SEEN"] = now
+
+    asset["COUNT"] = str(
+        int(asset["COUNT"]) + 1
+    )
+
+    asset["LAST_EVENT"] = event
+
+    return {
+        "changed": changed,
+        "new_asset": False,
+        "event": event,
+        "asset": asset,
+    }
 
 # ---------------------------------------------------------------------
 # Self Test
@@ -129,15 +246,32 @@ if __name__ == "__main__":
 
     ensure_inventory()
 
-    inv = load_inventory()
+    inventory = load_inventory()
 
-    print("Inventory loaded")
+    print(f"Assets before: {len(inventory)}")
 
-    print("Assets:", len(inv))
+    result = update_asset(
+        inventory=inventory,
+        ip="192.168.1.100",
+        mac="AA:BB:CC:DD:EE:FF",
+        hostname="TEST-PC",
+    )
 
-    print()
+    print("Event :", result["event"])
+    print("New   :", result["new_asset"])
 
-    print(INVENTORY)
+    save_inventory(inventory)
+
+    inventory = load_inventory()
+
+    print(f"Assets after : {len(inventory)}")
+
+    asset = get_asset(
+        inventory,
+        "aa:bb:cc:dd:ee:ff"
+    )
+
+    print(asset)
 
     print()
 
