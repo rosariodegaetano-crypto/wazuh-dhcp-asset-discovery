@@ -14,7 +14,7 @@ from __future__ import annotations
 import csv
 from pathlib import Path
 
-from utils import (
+from .utils import (
     load_config,
     atomic_write,
     utc_now,
