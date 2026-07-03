@@ -1,6 +1,26 @@
 Name: Wazuh DHCP Asset Discovery
+
 Version: 2.0.0-RC1
-Status: Development
-Compatible: Wazuh 4.14.5
-Python: >=3.10
+
+Status: Release Candidate
+
+Compatible:
+- Wazuh 4.14.5
+- Ubuntu 22.04 LTS
+- Python >= 3.10
+
+Project:
+DHCP Asset Discovery for Wazuh Manager
+
+Features:
+- DHCP Lease Discovery
+- Asset Inventory
+- Managed Agent Detection
+- DHCP Unknown Detection
+- Wazuh Event Integration
+- Systemd Service
+- Automatic Installer
+
 License: MIT
+
+Release Date: 2026-07-03
