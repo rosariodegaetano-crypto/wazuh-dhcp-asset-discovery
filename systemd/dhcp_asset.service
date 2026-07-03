@@ -1,0 +1,23 @@
+[Unit]
+Description=Wazuh DHCP Asset Discovery
+Documentation=https://github.com/rosariodegaetano-crypto/wazuh-dhcp-asset-discovery
+After=network.target wazuh-manager.service
+
+[Service]
+Type=simple
+
+User=root
+Group=root
+
+WorkingDirectory=/opt/dhcp_asset
+
+ExecStart=/usr/bin/python3 /opt/dhcp_asset/bin/dhcp_asset.py
+
+Restart=always
+RestartSec=5
+
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

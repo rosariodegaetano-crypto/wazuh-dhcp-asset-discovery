@@ -6,7 +6,8 @@ collector.py
 
 Main collection engine.
 
-Version: 2.0.0-RC1
+Version : 2.0.0-RC1
+License : MIT
 """
 
 from __future__ import annotations
@@ -31,73 +32,176 @@ from .event_writer import (
     write_unknown_event,
 )
 
+from .agent_checker import (
+    AgentChecker,
+)
+
 
 def follow(filename: Path):
     """
     Simple tail -f generator.
     """
 
-    with filename.open("r", encoding="utf-8") as f:
+    with filename.open("r", encoding="utf-8") as logfile:
 
-        f.seek(0, 2)
+        logfile.seek(0, 2)
 
         while True:
 
-            line = f.readline()
+            line = logfile.readline()
 
-            if not line:
+            if line:
+                yield line.rstrip()
+            else:
                 time.sleep(0.2)
-                continue
-
-            yield line.rstrip()
 
 
-def run():
+class Collector:
 
-    cfg = load_config()
+    def __init__(self):
 
-    logger = setup_logger()
+        self.cfg = load_config()
 
-    archive = Path(cfg["archive"])
+        self.logger = setup_logger()
 
-    logger.info("DHCP Asset Discovery started")
-    logger.info("Watching %s", archive)
+        self.archive = Path(self.cfg["archive"])
 
-    inventory = load_inventory()
+        self.inventory = load_inventory()
 
-    for line in follow(archive):
+        self.checker = AgentChecker()
 
-        record = parse_line(line)
+        #
+        # Duplicate protection
+        #
+        self._last_key = None
+        self._last_time = 0
 
-        if record is None:
-            continue
+    # ---------------------------------------------------------
+
+    def duplicate(self, record):
+
+        key = (
+            record["mac"].lower(),
+            record["ip"],
+            record["hostname"].lower(),
+        )
+
+        now = time.time()
+
+        if key == self._last_key and (now - self._last_time) < 2:
+
+            return True
+
+        self._last_key = key
+        self._last_time = now
+
+        return False
+
+    # ---------------------------------------------------------
+
+    def process_record(self, record):
+
+        if self.duplicate(record):
+            return
 
         result = update_asset(
-            inventory=inventory,
+
+            inventory=self.inventory,
+
             ip=record["ip"],
+
             mac=record["mac"],
+
             hostname=record["hostname"],
+
         )
 
         asset = result["asset"]
 
         #
-        # Notify only once
+        # Always recalculate status
         #
-        if asset["STATUS"] == "NEW":
+        old_status = asset["STATUS"]
 
-            write_unknown_event(asset)
+        if self.checker.is_managed(asset["HOSTNAME"]):
+
+            asset["STATUS"] = "MANAGED"
+
+        else:
 
             asset["STATUS"] = "DISCOVERED"
 
-        save_inventory(inventory)
+        #
+        # Status transition
+        #
+        if old_status != asset["STATUS"]:
 
-        logger.info(
-            "%-12s %-12s %-15s %-17s %s",
+            self.logger.info(
+
+                "STATUS %s -> %s (%s)",
+
+                old_status,
+
+                asset["STATUS"],
+
+                asset["HOSTNAME"],
+
+            )
+
+        #
+        # Generate event ONLY for NEW unmanaged assets
+        #
+        if (
+            result["event"] == "NEW"
+            and asset["STATUS"] == "DISCOVERED"
+        ):
+
+            write_unknown_event(asset)
+
+        save_inventory(self.inventory)
+
+        self.logger.info(
+
+            "%-8s %-11s %-15s %-17s %s",
+
             result["event"],
+
             asset["STATUS"],
+
             asset["IP"],
+
             asset["MAC"],
+
             asset["HOSTNAME"],
+
         )
 
+    # ---------------------------------------------------------
+
+    def run(self):
+
+        self.logger.info("DHCP Asset Discovery started")
+
+        self.logger.info("Watching %s", self.archive)
+
+        self.logger.info(
+
+            "Loaded %d managed agents",
+
+            self.checker.count(),
+
+        )
+
+        for line in follow(self.archive):
+
+            record = parse_line(line)
+
+            if record is None:
+                continue
+
+            self.process_record(record)
+
+
+def run():
+
+    Collector().run()
