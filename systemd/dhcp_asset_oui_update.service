@@ -1,0 +1,9 @@
+[Unit]
+Description=Update Wazuh DHCP Asset Discovery OUI vendor database
+Documentation=https://github.com/rosariodegaetano-crypto/wazuh-dhcp-asset-discovery
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/opt/dhcp_asset/install/update_oui.sh

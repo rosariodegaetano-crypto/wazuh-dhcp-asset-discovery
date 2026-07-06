@@ -2,7 +2,7 @@
 
 DHCP Asset Discovery for Wazuh Manager.
 
-Version: **2.0.0-RC3**
+Version: **2.1.0-RC1**
 
 Compatible with:
 
@@ -184,7 +184,7 @@ logs/inventory.csv
 Version:
 
 ```
-2.0.0-RC3
+2.1.0-RC1
 ```
 
 Status:
@@ -230,3 +230,44 @@ sudo systemctl restart wazuh-manager
 ```
 
 Unknown DHCP assets generate rule `100510` alerts at level `12`.
+
+---
+
+## Vendor Lookup
+
+The project supports local MAC vendor lookup using the IEEE OUI database.
+
+Local database:
+
+```text
+resources/oui.csv
+```
+
+Installed database:
+
+```text
+/opt/dhcp_asset/resources/oui.csv
+```
+
+Format:
+
+```csv
+OUI;VENDOR
+8C:C5:D0;Samsung Electronics Co.,Ltd
+D0:F4:05;Dell Inc.
+```
+
+The inventory `VENDOR` field is populated automatically when a MAC address matches a known OUI.
+
+Update the OUI database manually:
+
+```bash
+sudo /opt/dhcp_asset/install/update_oui.sh
+```
+
+A systemd timer can update the database weekly:
+
+```bash
+sudo systemctl enable --now dhcp_asset_oui_update.timer
+sudo systemctl list-timers | grep dhcp_asset_oui_update
+```

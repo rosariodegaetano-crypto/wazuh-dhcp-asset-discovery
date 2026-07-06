@@ -1,0 +1,10 @@
+[Unit]
+Description=Weekly Wazuh DHCP Asset Discovery OUI vendor database update
+
+[Timer]
+OnCalendar=Mon *-*-* 03:30:00
+Persistent=true
+Unit=dhcp_asset_oui_update.service
+
+[Install]
+WantedBy=timers.target

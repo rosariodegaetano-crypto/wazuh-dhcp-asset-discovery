@@ -6,6 +6,24 @@ The format is inspired by Keep a Changelog and follows Semantic Versioning.
 
 ---
 
+# [2.1.0-RC1] - 2026-07-06
+
+## Added
+
+- Added local OUI vendor lookup.
+- Added `lib/vendor.py`.
+- Added `resources/oui.csv` local vendor database.
+- Added `install/update_oui.sh` to download and convert the IEEE OUI database.
+- Added weekly systemd timer for OUI database updates.
+- Added vendor lookup documentation.
+
+## Changed
+
+- Inventory now populates the `VENDOR` field for known MAC OUIs.
+- Installer now deploys the update script and OUI update systemd units.
+
+---
+
 # [2.0.0-RC3] - 2026-07-06
 
 ## Added

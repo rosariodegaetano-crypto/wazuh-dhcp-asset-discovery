@@ -21,6 +21,10 @@ from .utils import (
     normalize_hostname,
 )
 
+from .vendor import (
+    VendorLookup,
+)
+
 # ---------------------------------------------------------------------
 # Configuration
 # ---------------------------------------------------------------------
@@ -30,6 +34,8 @@ CFG = load_config()
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 INVENTORY = PROJECT_ROOT / CFG["inventory"]
+
+VENDOR_LOOKUP = VendorLookup()
 
 HEADER = [
     "MAC",
@@ -185,7 +191,7 @@ def update_asset(
             "LAST_SEEN": now,
             "LAST_EVENT": "NEW",
             "COUNT": "1",
-            "VENDOR": "",
+            "VENDOR": VENDOR_LOOKUP.lookup(mac),
             "STATUS": "NEW",
             "LAST_ALERT": "",
         }
@@ -200,6 +206,12 @@ def update_asset(
         }
 
     asset = inventory[mac]
+
+    if not asset.get("VENDOR"):
+        vendor = VENDOR_LOOKUP.lookup(mac)
+
+        if vendor:
+            asset["VENDOR"] = vendor
 
     changed = False
 
