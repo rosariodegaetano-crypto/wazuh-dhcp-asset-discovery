@@ -10,6 +10,7 @@ User=root
 Group=root
 
 WorkingDirectory=/opt/dhcp_asset
+Environment=PYTHONPATH=/opt/dhcp_asset
 
 ExecStart=/usr/bin/python3 /opt/dhcp_asset/bin/dhcp_asset.py
 

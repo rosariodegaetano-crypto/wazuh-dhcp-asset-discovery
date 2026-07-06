@@ -1,0 +1,6 @@
+<!-- Add this block inside /var/ossec/etc/ossec.conf -->
+
+<localfile>
+  <log_format>syslog</log_format>
+  <location>/var/ossec/logs/dhcp_unknown.log</location>
+</localfile>

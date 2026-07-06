@@ -4,7 +4,7 @@
 #
 # install.sh
 #
-# Version: 2.0.0-RC1
+# Version: 2.0.0-RC3
 #
 
 set -e

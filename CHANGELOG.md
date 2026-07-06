@@ -6,6 +6,21 @@ The format is inspired by Keep a Changelog and follows Semantic Versioning.
 
 ---
 
+# [2.0.0-RC3] - 2026-07-06
+
+## Added
+
+- Added Wazuh decoder for `DHCP_UNKNOWN` events.
+- Added Wazuh rule `100510` with alert level `12`.
+- Added `ossec.conf` localfile snippet for `/var/ossec/logs/dhcp_unknown.log`.
+- Added README instructions for Wazuh alert integration.
+
+## Fixed
+
+- Added `PYTHONPATH=/opt/dhcp_asset` to the systemd service to allow package imports when running from `/opt/dhcp_asset/bin/dhcp_asset.py`.
+
+---
+
 # [2.0.0-RC2] - 2026-07-06
 
 ## Added

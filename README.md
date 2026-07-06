@@ -2,7 +2,7 @@
 
 DHCP Asset Discovery for Wazuh Manager.
 
-Version: **2.0.0-RC2**
+Version: **2.0.0-RC3**
 
 Compatible with:
 
@@ -184,7 +184,7 @@ logs/inventory.csv
 Version:
 
 ```
-2.0.0-RC2
+2.0.0-RC3
 ```
 
 Status:
@@ -198,3 +198,35 @@ Release Candidate
 ## License
 
 MIT
+
+---
+
+## Wazuh Alert Rule
+
+To generate Wazuh dashboard alerts for unknown DHCP assets, install the custom decoder and rule:
+
+```bash
+sudo cp wazuh/dhcp_asset_decoder.xml /var/ossec/etc/decoders/
+sudo cp wazuh/dhcp_asset_rules.xml /var/ossec/etc/rules/
+```
+
+Add the `localfile` block from:
+
+```text
+wazuh/ossec_localfile_snippet.xml
+```
+
+to:
+
+```text
+/var/ossec/etc/ossec.conf
+```
+
+Validate and restart Wazuh Manager:
+
+```bash
+sudo /var/ossec/bin/wazuh-analysisd -t
+sudo systemctl restart wazuh-manager
+```
+
+Unknown DHCP assets generate rule `100510` alerts at level `12`.

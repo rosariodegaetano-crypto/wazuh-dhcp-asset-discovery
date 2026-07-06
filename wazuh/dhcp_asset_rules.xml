@@ -1,0 +1,11 @@
+<!-- Wazuh DHCP Asset Discovery rules -->
+
+<group name="dhcp,dhcp_asset,asset_discovery,">
+
+  <rule id="100510" level="12">
+    <decoded_as>dhcp-unknown</decoded_as>
+    <description>Dispositivo DHCP senza agent Wazuh</description>
+    <group>dhcp,dhcp_asset,dhcp_unknown,asset_discovery,</group>
+  </rule>
+
+</group>
