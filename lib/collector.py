@@ -36,6 +36,10 @@ from .agent_checker import (
     AgentChecker,
 )
 
+from .whitelist import (
+    Whitelist,
+)
+
 
 def follow(filename: Path):
     """
@@ -69,6 +73,8 @@ class Collector:
         self.inventory = load_inventory()
 
         self.checker = AgentChecker()
+
+        self.whitelist = Whitelist()
 
         #
         # Duplicate protection
@@ -118,12 +124,18 @@ class Collector:
 
         asset = result["asset"]
 
+        whitelist_entry = self.whitelist.match(record)
+
         #
         # Always recalculate status
         #
         old_status = asset["STATUS"]
 
-        if self.checker.is_managed(asset["HOSTNAME"]):
+        if whitelist_entry is not None:
+
+            asset["STATUS"] = "WHITELISTED"
+
+        elif self.checker.is_managed(asset["HOSTNAME"]):
 
             asset["STATUS"] = "MANAGED"
 
@@ -189,6 +201,14 @@ class Collector:
             "Loaded %d managed agents",
 
             self.checker.count(),
+
+        )
+
+        self.logger.info(
+
+            "Loaded %d whitelist entries",
+
+            self.whitelist.count(),
 
         )
 

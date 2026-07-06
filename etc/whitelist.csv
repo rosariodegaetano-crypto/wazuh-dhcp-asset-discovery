@@ -1,0 +1,4 @@
+TYPE;VALUE;COMMENT
+MAC;aa:bb:cc:dd:ee:ff;Example MAC address
+HOSTNAME;printer-office;Example hostname
+IP;192.168.1.50;Example static DHCP lease

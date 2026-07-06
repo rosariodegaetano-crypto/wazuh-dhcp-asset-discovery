@@ -6,6 +6,29 @@ The format is inspired by Keep a Changelog and follows Semantic Versioning.
 
 ---
 
+# [2.0.0-RC2] - 2026-07-06
+
+## Added
+
+- Added whitelist support.
+- Added `lib/whitelist.py`.
+- Added `etc/whitelist.csv` example file.
+- Added support for whitelist matching by:
+  - MAC
+  - IP
+  - HOSTNAME
+
+## Changed
+
+- Collector now evaluates whitelist before managed-agent detection.
+- Whitelisted assets are stored in inventory with status `WHITELISTED`.
+
+## Fixed
+
+- Prevented `DHCP_UNKNOWN` event generation for whitelisted assets.
+
+---
+
 # [2.0.0-RC1] - 2026-07-03
 
 ## Added

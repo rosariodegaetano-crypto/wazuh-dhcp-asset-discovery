@@ -1,6 +1,6 @@
 Name: Wazuh DHCP Asset Discovery
 
-Version: 2.0.0-RC1
+Version: 2.0.0-RC2
 
 Status: Release Candidate
 
@@ -15,6 +15,7 @@ DHCP Asset Discovery for Wazuh Manager
 Features:
 - DHCP Lease Discovery
 - Asset Inventory
+- Whitelist Support
 - Managed Agent Detection
 - DHCP Unknown Detection
 - Wazuh Event Integration
@@ -23,4 +24,4 @@ Features:
 
 License: MIT
 
-Release Date: 2026-07-03
+Release Date: 2026-07-06

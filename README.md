@@ -2,7 +2,7 @@
 
 DHCP Asset Discovery for Wazuh Manager.
 
-Version: **2.0.0-RC1**
+Version: **2.0.0-RC2**
 
 Compatible with:
 
@@ -26,6 +26,7 @@ If the device is not managed, a custom event is generated for Wazuh.
 - DHCP lease parsing
 - Continuous monitoring of archives.log
 - Persistent inventory (CSV)
+- Whitelist support
 - Automatic managed agent detection
 - Wazuh event generation
 - Systemd service
@@ -70,6 +71,40 @@ Status values:
 - NEW
 - DISCOVERED
 - MANAGED
+- WHITELISTED
+
+---
+
+## Whitelist
+
+Whitelisted assets are stored in:
+
+```text
+etc/whitelist.csv
+```
+
+Supported fields:
+
+- MAC
+- IP
+- HOSTNAME
+
+Format:
+
+```csv
+TYPE;VALUE;COMMENT
+MAC;aa:bb:cc:dd:ee:ff;Example MAC address
+HOSTNAME;printer-office;Example hostname
+IP;192.168.1.50;Example static DHCP lease
+```
+
+When an asset matches the whitelist, the inventory status is set to:
+
+```text
+WHITELISTED
+```
+
+No `DHCP_UNKNOWN` event is generated for whitelisted assets.
 
 ---
 
@@ -149,7 +184,7 @@ logs/inventory.csv
 Version:
 
 ```
-2.0.0-RC1
+2.0.0-RC2
 ```
 
 Status:
