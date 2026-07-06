@@ -2,7 +2,7 @@
 
 DHCP Asset Discovery for Wazuh Manager.
 
-Version: **2.1.0-RC1**
+Version: **2.1.0-RC2**
 
 Compatible with:
 
@@ -184,7 +184,7 @@ logs/inventory.csv
 Version:
 
 ```
-2.1.0-RC1
+2.1.0-RC2
 ```
 
 Status:
@@ -271,3 +271,22 @@ A systemd timer can update the database weekly:
 sudo systemctl enable --now dhcp_asset_oui_update.timer
 sudo systemctl list-timers | grep dhcp_asset_oui_update
 ```
+
+---
+
+## Alert Frequency
+
+Unknown DHCP assets generate at most one Wazuh alert per day.
+
+The collector stores the last alert date in the inventory field:
+
+```text
+LAST_ALERT
+```
+
+Behavior:
+
+- First detection of an unmanaged asset: alert generated
+- Renew of the same asset on the same day: no new alert
+- Detection of the same unmanaged asset on a later day: alert generated again
+- Managed or whitelisted assets: no unknown-device alert

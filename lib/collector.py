@@ -13,6 +13,7 @@ License : MIT
 from __future__ import annotations
 
 import time
+from datetime import datetime, timezone
 from pathlib import Path
 
 from .utils import (
@@ -39,6 +40,25 @@ from .agent_checker import (
 from .whitelist import (
     Whitelist,
 )
+
+
+def today_utc() -> str:
+    """
+    Return current UTC date.
+    """
+
+    return datetime.now(timezone.utc).strftime("%Y-%m-%d")
+
+
+def should_alert(asset: dict) -> bool:
+    """
+    Return True if a discovered asset must generate an alert today.
+    """
+
+    if asset["STATUS"] != "DISCOVERED":
+        return False
+
+    return asset.get("LAST_ALERT", "") != today_utc()
 
 
 def follow(filename: Path):
@@ -161,14 +181,13 @@ class Collector:
             )
 
         #
-        # Generate event ONLY for NEW unmanaged assets
+        # Generate one event per day for unmanaged assets
         #
-        if (
-            result["event"] == "NEW"
-            and asset["STATUS"] == "DISCOVERED"
-        ):
+        if should_alert(asset):
 
             write_unknown_event(asset)
+
+            asset["LAST_ALERT"] = today_utc()
 
         save_inventory(self.inventory)
 

@@ -6,6 +6,16 @@ The format is inspired by Keep a Changelog and follows Semantic Versioning.
 
 ---
 
+# [2.1.0-RC2] - 2026-07-06
+
+## Changed
+
+- Unknown unmanaged assets now generate at most one alert per day.
+- `LAST_ALERT` is updated when a `DHCP_UNKNOWN` event is generated.
+- Renew events for already-alerted unmanaged assets no longer generate repeated same-day alerts.
+
+---
+
 # [2.1.0-RC1] - 2026-07-06
 
 ## Added
