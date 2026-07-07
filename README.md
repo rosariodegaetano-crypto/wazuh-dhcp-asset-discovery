@@ -2,7 +2,7 @@
 
 DHCP Asset Discovery for Wazuh Manager.
 
-Version: **2.1.0-RC2**
+Version: **2.1.0-RC3**
 
 Compatible with:
 
@@ -184,7 +184,7 @@ logs/inventory.csv
 Version:
 
 ```
-2.1.0-RC2
+2.1.0-RC3
 ```
 
 Status:
@@ -290,3 +290,24 @@ Behavior:
 - Renew of the same asset on the same day: no new alert
 - Detection of the same unmanaged asset on a later day: alert generated again
 - Managed or whitelisted assets: no unknown-device alert
+
+---
+
+## Vendor In Alerts
+
+Unknown DHCP asset events include vendor information when available.
+
+Event format:
+
+```text
+DHCP_UNKNOWN|IP|MAC|HOSTNAME|VENDOR|STATUS|COUNT
+```
+
+Example:
+
+```text
+DHCP_UNKNOWN|172.16.5.183|8c:c5:d0:32:50:36|galaxy-s25|Samsung Electronics Co.,Ltd|DISCOVERED|1
+```
+
+This makes Wazuh alerts and dashboard searches easier to enrich by vendor.
+

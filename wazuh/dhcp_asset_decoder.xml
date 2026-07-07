@@ -2,6 +2,6 @@
 
 <decoder name="dhcp-unknown">
   <prematch>^DHCP_UNKNOWN\|</prematch>
-  <regex>^DHCP_UNKNOWN\|([^|]+)\|([^|]+)\|([^|]+)\|([^|]+)\|([^|]+)$</regex>
-  <order>srcip,srcmac,hostname,status,extra_data</order>
+  <regex>^DHCP_UNKNOWN\|(.+)\|(.+)\|(.+)\|(.+)\|(.+)\|(.+)$</regex>
+  <order>srcip,srcmac,hostname,vendor,status,extra_data</order>
 </decoder>

@@ -6,7 +6,7 @@ event_writer.py
 
 Writes DHCP events for Wazuh.
 
-Version: 2.0.0-RC1
+Version: 2.1.0-RC3
 """
 
 from pathlib import Path
@@ -30,6 +30,7 @@ def write_unknown_event(asset: dict) -> None:
         f"{asset['IP']}|"
         f"{asset['MAC']}|"
         f"{asset['HOSTNAME']}|"
+        f"{asset.get('VENDOR', '')}|"
         f"{asset['STATUS']}|"
         f"{asset['COUNT']}\n"
     )
@@ -44,6 +45,7 @@ if __name__ == "__main__":
         "IP": "172.16.5.126",
         "MAC": "8c:c5:d0:32:50:36",
         "HOSTNAME": "galaxy-s25",
+        "VENDOR": "Samsung Electronics Co.,Ltd",
         "STATUS": "NEW",
         "COUNT": "1",
     }

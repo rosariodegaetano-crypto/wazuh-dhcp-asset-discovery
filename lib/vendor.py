@@ -6,7 +6,7 @@ vendor.py
 
 Local OUI vendor lookup.
 
-Version : 2.1.0-RC2
+Version : 2.1.0-RC3
 License : MIT
 """
 

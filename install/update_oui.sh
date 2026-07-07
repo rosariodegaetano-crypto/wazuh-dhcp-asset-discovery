@@ -4,7 +4,7 @@
 #
 # update_oui.sh
 #
-# Version: 2.1.0-RC2
+# Version: 2.1.0-RC3
 #
 
 set -euo pipefail

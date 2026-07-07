@@ -1,6 +1,6 @@
 Name: Wazuh DHCP Asset Discovery
 
-Version: 2.1.0-RC2
+Version: 2.1.0-RC3
 
 Status: Release Candidate
 
@@ -20,6 +20,7 @@ Features:
 - Vendor Lookup
 - Weekly OUI Database Update
 - Daily Unknown Asset Alert Suppression
+- Vendor Enriched Unknown Asset Alerts
 - Managed Agent Detection
 - DHCP Unknown Detection
 - Wazuh Event Integration
@@ -28,4 +29,4 @@ Features:
 
 License: MIT
 
-Release Date: 2026-07-06
+Release Date: 2026-07-07

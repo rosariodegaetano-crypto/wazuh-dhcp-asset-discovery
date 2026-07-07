@@ -6,6 +6,16 @@ The format is inspired by Keep a Changelog and follows Semantic Versioning.
 
 ---
 
+# [2.1.0-RC3] - 2026-07-07
+
+## Changed
+
+- `DHCP_UNKNOWN` events now include the asset vendor field.
+- Updated the Wazuh DHCP decoder to parse the vendor field.
+- Updated documentation for vendor-enriched unknown asset alerts.
+
+---
+
 # [2.1.0-RC2] - 2026-07-06
 
 ## Changed
