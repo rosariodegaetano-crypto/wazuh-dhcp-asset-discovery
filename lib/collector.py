@@ -63,21 +63,73 @@ def should_alert(asset: dict) -> bool:
 
 def follow(filename: Path):
     """
-    Simple tail -f generator.
+    Tail a file and reopen it when it is rotated or truncated.
     """
 
-    with filename.open("r", encoding="utf-8") as logfile:
+    logfile = None
+    current_inode = None
+    current_device = None
+    current_size = 0
 
-        logfile.seek(0, 2)
+    while True:
 
-        while True:
+        try:
 
-            line = logfile.readline()
+            stat = filename.stat()
 
-            if line:
-                yield line.rstrip()
-            else:
-                time.sleep(0.2)
+        except FileNotFoundError:
+
+            if logfile is not None:
+                logfile.close()
+                logfile = None
+
+            time.sleep(0.5)
+            continue
+
+        if (
+            logfile is None
+            or stat.st_ino != current_inode
+            or stat.st_dev != current_device
+            or stat.st_size < current_size
+        ):
+
+            if logfile is not None:
+                logfile.close()
+
+            logfile = filename.open(
+                "r",
+                encoding="utf-8",
+                errors="replace",
+            )
+
+            logfile.seek(0, 2)
+
+            current_inode = stat.st_ino
+            current_device = stat.st_dev
+            current_size = stat.st_size
+
+        if logfile.tell() > stat.st_size:
+
+            logfile.close()
+
+            logfile = filename.open(
+                "r",
+                encoding="utf-8",
+                errors="replace",
+            )
+
+            current_inode = stat.st_ino
+            current_device = stat.st_dev
+            current_size = stat.st_size
+
+        line = logfile.readline()
+
+        if line:
+            current_size = max(current_size, logfile.tell())
+            yield line.rstrip()
+        else:
+            current_size = stat.st_size
+            time.sleep(0.2)
 
 
 class Collector:

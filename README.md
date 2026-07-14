@@ -2,7 +2,7 @@
 
 DHCP Asset Discovery for Wazuh Manager.
 
-Version: **2.1.0-RC3**
+Version: **2.1.0-RC4**
 
 Compatible with:
 
@@ -184,7 +184,7 @@ logs/inventory.csv
 Version:
 
 ```
-2.1.0-RC3
+2.1.0-RC4
 ```
 
 Status:
@@ -311,3 +311,17 @@ DHCP_UNKNOWN|172.16.5.183|8c:c5:d0:32:50:36|galaxy-s25|Samsung Electronics Co.,L
 
 This makes Wazuh alerts and dashboard searches easier to enrich by vendor.
 
+
+---
+
+## Archive Log Rotation
+
+The collector follows:
+
+```text
+/var/ossec/logs/archives/archives.log
+```
+
+It detects archive log rotation or truncation and automatically reopens the active file.
+
+This prevents the service from staying attached to an old rotated file and missing new DHCP lease events.

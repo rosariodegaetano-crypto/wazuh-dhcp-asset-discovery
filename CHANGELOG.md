@@ -6,6 +6,16 @@ The format is inspired by Keep a Changelog and follows Semantic Versioning.
 
 ---
 
+# [2.1.0-RC4] - 2026-07-14
+
+## Fixed
+
+- Collector now detects archive log rotation and reopens the active `archives.log`.
+- Collector now handles truncated archive logs without staying attached to an old file position.
+- Collector now opens archive logs with replacement handling for invalid UTF-8 bytes.
+
+---
+
 # [2.1.0-RC3] - 2026-07-07
 
 ## Changed

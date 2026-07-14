@@ -6,7 +6,7 @@ event_writer.py
 
 Writes DHCP events for Wazuh.
 
-Version: 2.1.0-RC3
+Version: 2.1.0-RC4
 """
 
 from pathlib import Path
